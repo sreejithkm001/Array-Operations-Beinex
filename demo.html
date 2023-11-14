@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management</title>
+    <style>
+        table {
+            margin-top: 40px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Student Management</h2>
+
+    <div>
+        <label for="sort">Sort by:</label>
+        <select id="sort" onchange="sortTable()">
+            <option value="name">Name</option>
+            <option value="age">Age</option>
+            <option value="department">Department</option>
+            <option value="marks">Marks</option>
+            <option value="state">State</option>
+            <option value="student_id">Student ID</option>
+        </select>
+
+        <label for="search">Search:</label>
+        <input type="text" id="search" oninput="searchTable()" placeholder="Enter search term">
+
+        <label for="minMark">Filter by Min Mark:</label>
+        <input type="number" id="minMark" placeholder="Enter min mark">
+        <button onclick="filterByMinMark()">Filter</button>
+    </div>
+
+    <table id="studentTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Department</th>
+                <th>Marks</th>
+                <th>State</th>
+                <th>Student ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Table content will be populated dynamically using JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        // Sample array of students
+        const students = [
+            { name: 'Ram', age: 20, department: 'IT', marks: 85, state: 'Thrissur', student_id: '1001' },
+            { name: 'Sam', age: 22, department: 'Maths', marks: 75, state: 'Palakkad', student_id: '1002' },
+            { name: 'Vishnu', age: 21, department: 'Biology', marks: 90, state: 'Ernakulam', student_id: '1003' },
+            { name: 'Akash', age: 22, department: 'Maths', marks: 95, state: 'Thrissur', student_id: '1004' },
+            { name: 'Vyshak', age: 21, department: 'Biology', marks: 83, state: 'Wayanad', student_id: '1005' },
+            { name: 'Sivan', age: 23, department: 'Maths', marks: 77, state: 'Thrissur', student_id: '1006' },
+            { name: 'Sahal', age: 20, department: 'IT', marks: 85, state: 'Palakkad', student_id: '1007' },
+            // Add more students as needed
+        ];
+
+        // Function to display students in the table
+        function displayStudents(studentArray) {
+            const tableBody = document.querySelector('#studentTable tbody');
+            tableBody.innerHTML = ''; // Clear existing content
+
+            (studentArray || students).forEach(student => {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${student.name}</td><td>${student.age}</td><td>${student.department}</td><td>${student.marks}</td><td>${student.state}</td><td>${student.student_id}</td>`;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function sortTable() {
+            const sortBy = document.getElementById('sort').value;
+            const sortedStudents = [...students].sort((a, b) => {
+                if (typeof a[sortBy] === 'string') {
+                    return a[sortBy].localeCompare(b[sortBy]);
+                } else {
+                    return a[sortBy] - b[sortBy];
+                }
+            });
+            displayStudents(sortedStudents);
+        }
+
+
+        // Function to search the table
+        function searchTable() {
+            const searchTerm = document.getElementById('search').value.toLowerCase();
+            const filteredStudents = students.filter(student =>
+                Object.values(student).some(value => typeof value === 'string' && value.toLowerCase().includes(searchTerm))
+            );
+            displayStudents(filteredStudents);
+        }
+
+        // Function to filter the table by minimum mark
+        function filterByMinMark() {
+            const minMark = parseInt(document.getElementById('minMark').value, 10);
+            const filteredStudents = students.filter(student => student.marks >= minMark);
+            displayStudents(filteredStudents);
+        }
+
+        // Initial display
+        displayStudents();
+    </script>
+
+</body>
+
+</html>
